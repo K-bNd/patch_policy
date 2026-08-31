@@ -81,10 +81,11 @@ class LiberoGoalDataset(TrajectoryDataset):
         self.states = pad_sequence(self.states, batch_first=True).float()
         self.actions = pad_sequence(self.actions, batch_first=True).float()
 
-        # last frame goal
+        # last frame goal (demos are sorted by task dir; 10 tasks)
+        self.demos_per_task = len(self.demos) // 10
         self.goals = None
         goals = []
-        for i in range(0, len(self.demos), 50):
+        for i in range(0, len(self.demos), self.demos_per_task):
             last_obs, _, _ = self.get_frames(i, [-1])  # 1 V C H W
             goals.append(last_obs)
         self.goals = goals
@@ -109,7 +110,7 @@ class LiberoGoalDataset(TrajectoryDataset):
 
         act = self.actions[idx][frames]
         if self.goals is not None:
-            task_idx = idx // 50
+            task_idx = idx // self.demos_per_task
             goal = self.goals[task_idx].repeat(len(frames), 1, 1, 1, 1)
             return obs, act, goal
         else:

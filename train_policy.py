@@ -42,7 +42,10 @@ if "MUJOCO_GL" not in os.environ:
 def seed_everything(random_seed: int):
     np.random.seed(random_seed)
     torch.manual_seed(random_seed)
-    torch.cuda.manual_seed_all(random_seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(random_seed)
+    if getattr(torch, "xpu", None) is not None and torch.xpu.is_available():
+        torch.xpu.manual_seed_all(random_seed)
     random.seed(random_seed)
 
 
@@ -323,7 +326,7 @@ def main(cfg):
             goals_cache = []
             for i in range(10):
             # for i in range(len(dataset) // 50):
-                idx = i * 50
+                idx = i * (len(dataset) // 10)
                 last_obs, _, _ = dataset.get_frames(idx, [-1])  # 1 V C H W
                 last_obs = last_obs.to(cfg.device)
                 embd = encoder(last_obs)[0]  # V P E
