@@ -326,7 +326,7 @@ def main(cfg):
             goals_cache = []
             for i in range(10):
             # for i in range(len(dataset) // 50):
-                idx = i * (len(dataset) // 10)
+                idx = i * 50
                 last_obs, _, _ = dataset.get_frames(idx, [-1])  # 1 V C H W
                 last_obs = last_obs.to(cfg.device)
                 embd = encoder(last_obs)[0]  # V P E

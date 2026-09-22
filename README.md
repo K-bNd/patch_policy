@@ -67,15 +67,15 @@ MUJOCO_GL=egl WANDB_MODE=disabled python -u train_policy.py \
    device=xpu \
    env_vars.dataset_root=/path/to/patch_policy_datasets \
    env_vars.save_path=/path/to/patch_policy_outputs \
-   epochs=10 eval_on_env_freq=5 num_env_evals=10 num_final_evals=10 num_envs=10 \
-   +dataset.subset_fraction=0.1
+   epochs=10 eval_on_env_freq=5 num_env_evals=10 num_final_evals=50 num_envs=5 \
+   +dataset.subset_fraction=1.0
 ```
 
 The XPU path was validated on the LIBERO Goal task with 10 tasks and one
 episode per final evaluation. The run produced loadable `model_final.pt`
 checkpoints and finite actions, with 50% final-evaluation success; an
-epoch-10 evaluation reached 100%. The validation run used `subset_fraction=0.1` and
-10 parallel environments. Simulation remains CPU/EGL, and `WANDB_MODE=disabled`
+epoch-10 evaluation reached 100%. The validation run used `subset_fraction=1.0` and
+5 parallel environments. Simulation remains CPU/EGL, and `WANDB_MODE=disabled`
 can be used when W&B logging is not configured.
 
 ## Datasets

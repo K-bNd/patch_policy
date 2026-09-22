@@ -61,7 +61,6 @@ class LiberoEnv(gym.Env):
         self.steps = 0
         self.goal_idx = 0
         self.episodes = 0
-        self._seed = None
         self.view_idx = view_idx
 
     def seed(self, seed=None):
@@ -85,12 +84,7 @@ class LiberoEnv(gym.Env):
         }
 
         self.env = OffScreenRenderEnv(**env_args)
-        # SubprocVectorEnv.seed is a no-op, so _seed may still be None (or a
-        # list, when train_policy.py seeds the vector env). Normalize to int.
-        seed_val = self._seed
-        if isinstance(seed_val, (list, tuple)):
-            seed_val = seed_val[0] if len(seed_val) else 0
-        self.env.seed((seed_val if seed_val is not None else 0) + self.episodes)
+        self.env.seed(self._seed + self.episodes)
         obs = self.env.reset()
         zero_action = np.zeros(7)
         for i in range(20):
