@@ -28,6 +28,56 @@ conda activate patch-policy
 
 Tested on Ubuntu 22.04 with CUDA 12.8. To log training runs, log in to Weights & Biases with `wandb login` (or set `export WANDB_MODE=disabled` to turn logging off). In `./configs/env_vars/env_vars.yaml`, set `wandb_entity` to your wandb username.
 
+### Intel XPU Support
+
+Patch Policy training and LIBERO Goal evaluation are supported on Intel GPUs
+through the PyTorch XPU backend. The simulator runs on the CPU, while the
+frozen visual encoder and policy run on `xpu:0` through Accelerate.
+
+**Requirements**
+
+- Python 3.12
+- PyTorch `2.13.0+xpu`
+- A supported Intel GPU with the matching Intel GPU runtime and oneAPI drivers
+- The LIBERO assets configured as described below
+
+The repository's `conda_env.yml` installs CUDA PyTorch. Keep that environment
+for CUDA and create the separate XPU environment from `conda_env_xpu.yml`:
+
+```bash
+conda env create -f conda_env_xpu.yml
+conda activate patch-policy-xpu
+```
+
+The validated XPU environment uses Python 3.12, PyTorch `2.13.0+xpu`, Accelerate `1.14.0`,
+MuJoCo `3.2.7`, and robosuite `1.4.1`.
+
+Verify the backend before starting a run:
+
+```bash
+python -c "import torch; print(torch.__version__, torch.xpu.is_available())"
+```
+
+Download and unpack the datasets as described in [Datasets](#datasets), then
+run the LIBERO Goal configuration with `device=xpu`:
+
+```bash
+MUJOCO_GL=egl WANDB_MODE=disabled python -u train_policy.py \
+   --config-name train_libero_goal_1gpu \
+   device=xpu \
+   env_vars.dataset_root=/path/to/patch_policy_datasets \
+   env_vars.save_path=/path/to/patch_policy_outputs \
+   epochs=10 eval_on_env_freq=5 num_env_evals=10 num_final_evals=50 num_envs=5 \
+   +dataset.subset_fraction=1.0
+```
+
+The XPU path was validated on the LIBERO Goal task with 10 tasks and one
+episode per final evaluation. The run produced loadable `model_final.pt`
+checkpoints and finite actions, with 50% final-evaluation success; an
+epoch-10 evaluation reached 100%. The validation run used `subset_fraction=1.0` and
+5 parallel environments. Simulation remains CPU/EGL, and `WANDB_MODE=disabled`
+can be used when W&B logging is not configured.
+
 ## Datasets
 
 The datasets for all four simulation environments are hosted on the Hugging Face Hub:
