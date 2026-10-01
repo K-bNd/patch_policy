@@ -2,7 +2,7 @@
 
 [[Project Website]](https://patch-policy.github.io/) [[Paper]](https://arxiv.org/abs/2607.18236v1) [[Dataset]](https://huggingface.co/datasets/gaoyuezhou/patch-policy-datasets)
 
-[Gaoyue Zhou](https://gaoyuezhou.github.io/), [Zichen Jeff Cui](https://jeffcui.com/), [Ada Langford](https://www.linkedin.com/in/ada-langford-231883332/), [Bowen Tan](https://bowen-tan.com/), [Yann LeCun](http://yann.lecun.com/) and [Lerrel Pinto](https://www.lerrelpinto.com/), New York University, Meta AI, AMI Labs
+[Gaoyue Zhou*](https://gaoyuezhou.github.io/), [Zichen Jeff Cui*](https://jeffcui.com/), [Ada Langford](https://www.linkedin.com/in/ada-langford-231883332/), [Bowen Tan](https://bowen-tan.com/), [Yann LeCun](http://yann.lecun.com/) and [Lerrel Pinto](https://www.lerrelpinto.com/), New York University, Meta AI, AMI Labs
 
 https://github.com/user-attachments/assets/3de8fc0d-9411-41f3-84c3-9e79b899e144
 
